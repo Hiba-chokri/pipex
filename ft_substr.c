@@ -1,4 +1,21 @@
-char	*ft_substr(char const *s, unsigned int start, size_t len)
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_substr.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+        
+	+:+     */
+/*   By: hichokri <marvin@42.fr>                    +#+  +:+      
+	+#+        */
+/*                                                +#+#+#+#+#+  
+	+#+           */
+/*   Created: 2024/02/11 16:11:53 by hichokri          #+#    #+#             */
+/*   Updated: 2024/02/11 16:11:58 by hichokri         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "pipex.h"
+
+char	*ft_substr(char *s, unsigned int start, size_t len)
 {
 	unsigned int	i;
 	unsigned int	j;

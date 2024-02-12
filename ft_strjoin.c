@@ -1,22 +1,42 @@
-//strjoin function is used to join the path with the command,Protect strjoin with a condition to check if the first argument is not NULL
-char	*ft_strjoin(char const *s1, char const *s2)
-{
-	char	*join;
-	int		s1_len;
-	int		s2_len;
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_strjoin.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hichokri <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/02/11 16:10:44 by hichokri          #+#    #+#             */
+/*   Updated: 2024/02/11 16:10:51 by hichokri         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-	if (!s1 && !s2)
-		return (ft_strdup(""));
-	else if (!s1)
-		return (ft_strdup(s2));
-	else if (!s2)
-		return (ft_strdup(s1));
-	s1_len = ft_strlen(s1);
-	s2_len = ft_strlen(s2);
-	join = (char *)malloc(s1_len + s2_len + 1);
-	if (!join)
+#include "pipex.h"
+
+//strjoin function is used to join the path with the command,Protect strjoin with a condition to check if the first argument is not NULL
+
+char	*ft_strjoin(char *s1, char *s2)
+{
+	size_t	i;
+	size_t	j;
+	char	*str;
+
+	i = 0;
+	j = 0;
+	if (!s2)
 		return (NULL);
-	ft_strlcpy(join, s1, s1_len + 1);
-	ft_strlcat(join, s2, s1_len + s2_len + 1);
-	return (join);
+	if (!s1)
+		return (ft_strdup(s2));
+	str = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+	if (!str)
+		return (NULL);
+	while (s1[i])
+	{
+		str[i] = s1[i];
+		i++;
+	}
+	while (s2[j])
+		str[i++] = s2[j++];
+	str[i] = '\0';
+	// free(s1);
+	return (str);
 }

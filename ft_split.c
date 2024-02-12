@@ -1,4 +1,18 @@
-static size_t	count_words(const char *str, char c)
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_split.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hichokri <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/02/11 16:10:02 by hichokri          #+#    #+#             */
+/*   Updated: 2024/02/11 16:10:08 by hichokri         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "pipex.h"
+
+static size_t	count_words(char *str, char c)
 {
 	size_t	count;
 	size_t	i;
@@ -34,7 +48,7 @@ static void	*free_str(char **tab, int c)
 	return (NULL);
 }
 
-char	**ft_split(char const *s, char c)
+char	**ft_split(char *s, char c)
 {
 	char			**arr;
 	unsigned int	i;
