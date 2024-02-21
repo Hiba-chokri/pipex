@@ -2,18 +2,29 @@
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   functions.c                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+
-	+:+     */
-/*   By: hichokri <marvin@42.fr>                    +#+  +:+
-	+#+        */
-/*                                                +#+#+#+#+#+
-	+#+           */
-/*   Created: 2024/02/11 16:12:16 by hichokri          #+#    #+#             */
-/*   Updated: 2024/02/11 16:12:20 by hichokri         ###   ########.fr       */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hichokri <hichokri@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/02/15 23:10:15 by hichokri          #+#    #+#             */
+/*   Updated: 2024/02/21 18:06:14 by hichokri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
+
+void	*free_str(char **tab, int c)
+{
+	int	i;
+
+	i = 0;
+	while (i < c)
+	{
+		free(tab[i]);
+		i++;
+	}
+	free(tab);
+	return (NULL);
+}
 
 char	*find_path(char **env)
 {
@@ -40,26 +51,39 @@ char	**cmd_path(char **path, char *cmd)
 
 	i = 0;
 	j = 0;
+	if (access(cmd, F_OK | X_OK) == 0)
+	{
+		path[0] = cmd;
+		return (path);
+	}
 	path_cmd = ft_strjoin("/", cmd);
 	while (path[i])
 	{
 		tmp = path[i];
 		path[i] = ft_strjoin(tmp, path_cmd);
+		free(tmp);
 		i++;
 	}
+	free(path_cmd);
 	return (path);
 }
 
-void	child_process1(t_pipex *pipex, char *cmd1)
+void	child_process1(t_pipex *pipex, char *cmd1, char *env[])
 {
 	int		i;
 	char	**cmd;
 
 	i = 0;
-	pipex->cmd_args = ft_split(cmd1, ' ');
+	pipex->infile = open(pipex->argv[1], O_RDONLY);
+	if (pipex->infile == -1)
+	{
+		perror("opening file error");
+		close(pipex->fd[0]);
+		close(pipex->fd[1]);
+		exit(pipex->status);
+	}
+	pipex->cmd_args = ft_split(cmd1, " \r\f\v\t\n");
 	cmd = cmd_path(pipex->cmd_path, pipex->cmd_args[0]);
-    // to check if the commad exists so
-    // execve will not execute a non existing command
 	while (cmd[i])
 	{
 		if (access(cmd[i], F_OK | X_OK) == 0)
@@ -69,49 +93,41 @@ void	child_process1(t_pipex *pipex, char *cmd1)
 			close(pipex->fd[0]);
 			close(pipex->fd[1]);
 			close(pipex->infile);
-			close(pipex->outfile);
-			if (execve(cmd[i], pipex->cmd_args, NULL) == -1)
-				perror("execve error");
+			execve(cmd[i], pipex->cmd_args, env);
 		}
-		//free(cmd);// we free and we try a new path
 		i++;
-		// cmd = cmd_path(pipex->cmd_path[i], pipex->cmd_args[0]);
 	}
 	perror("command not found");
+	exit(pipex->status);
 }
 
-void	child_process2(t_pipex *pipex, char *cmd2)
+void	child_process2(t_pipex *pipex, char *cmd2, char *env[])
 {
 	int		i;
 	char	**cmd;
 
 	i = 0;
-
-	pipex->cmd_args = ft_split(cmd2, ' ');
+	pipex->outfile = open(pipex->argv[4], O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	if (pipex->outfile == -1)
+	{
+		perror("opening file error");
+		exit(1);
+	}
+	pipex->cmd_args = ft_split(cmd2, " \r\f\v\t\n");
 	cmd = cmd_path(pipex->cmd_path, pipex->cmd_args[0]);
 	while (cmd[i])
 	{
-		
 		if (access(cmd[i], F_OK | X_OK) == 0)
 		{
-			// if (dup2(pipex->fd[0], 0) < 0)
-			// 	perror("dup2 error");
-			// if (dup2(pipex->outfile, 1) < 0)
-			// 	perror("dup2 error");
-
 			dup2(pipex->fd[0], 0);
 			dup2(pipex->outfile, 1);
 			close(pipex->fd[0]);
 			close(pipex->fd[1]);
-			close(pipex->infile);
 			close(pipex->outfile);
-
-			execve(cmd[i], pipex->cmd_args, NULL);
-			perror("execve error");
+			execve(cmd[i], pipex->cmd_args, env);
 		}
-		//free(cmd);
 		i++;
-		// cmd = cmd_path(pipex->cmd_path[i], pipex->cmd_args[0]);
 	}
 	perror("command not found");
+	exit(127);
 }

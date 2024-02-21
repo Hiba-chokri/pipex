@@ -35,9 +35,11 @@ typedef struct s_pipex
 	char	**cmd_args;
 	pid_t	pid1;
 	pid_t	pid2;
+	char	**argv;
+	int		status;
 }	t_pipex;
 
-char	**ft_split(char *s, char c);
+char	**ft_split(char *str, char *charset);
 char	*ft_strstr(char *s1, char *s2);
 char	*ft_strdup(char *s);
 char	*ft_strjoin(char *s1, char *s2);
@@ -45,7 +47,8 @@ size_t	ft_strlen(char *s);
 char	*ft_substr(char *s, unsigned int start, size_t len);
 char	*find_path(char **env);
 char	**cmd_path(char **path, char *cmd);
-void	child_process1(t_pipex *pipex, char *cmd1);
-void	child_process2(t_pipex *pipex, char *cmd2);
+void	child_process1(t_pipex *pipex, char *cmd1, char *env[]);
+void	child_process2(t_pipex *pipex, char *cmd2, char *env[]);
+void	*free_str(char **tab, int c);
 
 #endif

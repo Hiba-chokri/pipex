@@ -6,13 +6,11 @@
 /*   By: hichokri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/11 16:10:44 by hichokri          #+#    #+#             */
-/*   Updated: 2024/02/11 16:10:51 by hichokri         ###   ########.fr       */
+/*   Updated: 2024/02/21 15:46:24 by hichokri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
-
-//strjoin function is used to join the path with the command,Protect strjoin with a condition to check if the first argument is not NULL
 
 char	*ft_strjoin(char *s1, char *s2)
 {
@@ -37,6 +35,5 @@ char	*ft_strjoin(char *s1, char *s2)
 	while (s2[j])
 		str[i++] = s2[j++];
 	str[i] = '\0';
-	// free(s1);
 	return (str);
 }

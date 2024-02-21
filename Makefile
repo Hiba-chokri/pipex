@@ -2,19 +2,17 @@ NAME = pipex
 
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -fsanitize=address
 
-SRCS = functions.c pipex.c ft_strlen.c ft_split.c ft_strjoin.c ft_substr.c ft_strdup.c ft_strstr.c
+SRCS = pipex.c functions.c  ft_strlen.c ft_split.c ft_strjoin.c ft_substr.c ft_strdup.c ft_strstr.c
 
 OBJS = ${SRCS:.c=.o}
 
 all: ${NAME}
 
 $(NAME): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -o $(NAME) -fsanitize=address
+	$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
 
-# $(OBJS): $(SRCS)
-# 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
 	rm -f $(OBJS)
